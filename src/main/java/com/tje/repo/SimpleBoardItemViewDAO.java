@@ -57,6 +57,20 @@ private JdbcTemplate jdbcTemplate;
 		return results.isEmpty() ? null : results;
 	}
 	
+	public List<SimpleBoardItemView> listCriteria(int pageStart, int perPageNum) {
+		String sql = "select * from simpleboarditemview where board_id>0 order by board_id desc limit ?,?";
+		List<SimpleBoardItemView> results=this.jdbcTemplate.query(sql,
+				new SimpleBoardItemViewRowMapper(),
+				pageStart,
+				perPageNum);
+		return results.isEmpty() ? null : results;
+	}
+	
+	public int listCountCriteria() {
+		String sql = "select count(*) from simpleboarditemview";
+		return this.jdbcTemplate.queryForObject(sql, Integer.class);
+	}
+	
 	public List<SimpleBoardItemView> selectAllOrdByDateDesc() {
 		String sql = "select * from simpleboarditemview order by write_date desc";
 		List<SimpleBoardItemView> results=this.jdbcTemplate.query(sql,

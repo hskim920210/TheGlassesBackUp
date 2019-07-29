@@ -34,13 +34,18 @@
 	
 	<div class="site-section">
       <div class="container">
-      	<p><button class="btn btn-info" type="button" id="add_item">상품 추가</button></p>
+      
+      	<c:if test="${ login_member.auth >= 2 }">
+      		<p><a href="<%=request.getContextPath()%>/add_item" class="btn btn-info" type="button">상품 추가</a></p>
+      		<!-- <p><button class="btn btn-info" type="button" id="add_item">상품 추가</button></p> -->
+      	</c:if>
+            	
         <div class="row">
         <c:forEach items="${ item_list }" var="item">
           <div class="col-md-6 col-lg-4 mb-4 mb-lg-4">
             <div class="h-entry">
-              <img src="/webapp/resources/images/blog_1.jpg" alt="Image" class="img-fluid">
-              <h2 class="font-size-regular"><a href="<%=request.getContextPath()%>/item/${item.board_id}">${ item.title }</a></h2>
+              <img src="<%=request.getContextPath()%>/resources/images/${item.image}" alt="Image" class="img-fluid">
+              <h2 class="font-size-regular"><a href="<%=request.getContextPath()%>/item_view/${item.board_id}">${ item.title }</a></h2>
               <div class="meta">${ item.nickname } <span class="mx-2">•</span> ${ item.write_date }<span class="mx-2">•</span> ${ item.getCategoryString() }</div>
               <div class="meta mb-4">조회수 : ${ item.view_cnt } <span class="mx-2">•</span>댓글수 : ${ item.comment_cnt }<span class="mx-2">•</span>좋아요/싫어요 : ${ item.like_cnt }/${ item.dislike_cnt } </div>
               <p style="word-wrap: break-word;">${ item.getRestrictedContent() }</p>
@@ -49,7 +54,31 @@
           </c:forEach>
         </div>
       </div>
-    </div>	
+    </div>
+    
+    <div class="container text-center pb-5">
+      <div class="row">
+        <div class="col-12">
+        	
+          <p class="custom-pagination">
+         	<c:if test="${pageMaker.prev == true }">
+        		<a href="<%=request.getContextPath()%>/item/${pageMaker.startPage-1}">&laquo;</a>
+        	</c:if>
+          	<c:forEach var="pageNo" begin="${ pageMaker.startPage }" end="${ pageMaker.endPage }">
+          		<c:if test="${curPageNo == pageNo}" var="r">
+          			<span>${curPageNo}</span>
+          		</c:if>
+          		<c:if test="${ not r }">
+          			<a href="<%=request.getContextPath()%>/item/${pageNo}">${ pageNo }</a>
+          		</c:if>
+          	</c:forEach>
+            <c:if test="${pageMaker.next == true and pageMaker.endPage > 0}">
+        		<a href="<%=request.getContextPath()%>/item/${pageMaker.endPage+1}">&raquo;</a>
+        	</c:if>
+          </p>
+        </div>
+      </div>
+    </div>
 
 	<jsp:include page="javascriptInclude.jsp" flush="false"></jsp:include>
 </body>
